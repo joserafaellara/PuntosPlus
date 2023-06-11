@@ -4,7 +4,13 @@
         <v-container id="contenedor-info">
             <v-btn style="margin:15px;" color="primary" @click="mostrarFormulario = !mostrarFormulario">{{mostarFormulario ? 'Cancelar' : 'Agregar'}}</v-btn>
             <div v-if="mostrarFormulario">
-                <FormularioProducto ></FormularioProducto>   
+                <v-form class="formulario">
+      <v-text-field v-model="elemento.name" label="Nombre" ></v-text-field>
+      <v-textarea v-model="elemento.description" label="Descripcion" ></v-textarea>
+      <v-text-field v-model="elemento.points" label="Puntos" ></v-text-field>
+      <v-btn color="primary" @click="agregarElemento">Confirmar</v-btn>
+    
+    </v-form>
             </div>
             
             
@@ -26,8 +32,7 @@
   </template>
   
   <script>
-  import productsList from '../service/productsList';
- import FormularioProducto from '../components/FormularioProducto.vue';
+  import productsList from '../service/productsList'
   export default {
     data() {
         return {
@@ -68,12 +73,19 @@
             catch (error) {
                 alert("error de conexion");
             }
-        },
+        },async agregarElemento() {
+      const elemento = {...this.elemento}
+      try {
+        await productsList.agregarElemento(elemento)
+        this.cargarProducts()
+        this.elemento = {}
+      } catch (error) {
+        alert(error)
+        console.log(error);
+      }
     },
-    components: { FormularioProducto }
-  
 
-    
+    }  
 }
   
   </script>
@@ -94,5 +106,8 @@
   top:60px;
   max-width:80%;
   margin:left;
+}
+.formulario{
+    margin:20px;
 }
   </style>
