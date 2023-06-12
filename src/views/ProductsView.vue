@@ -18,10 +18,25 @@
             <v-col v-for="product in products" :key="product.id" cols="6" sm="4" md="3">
                 <v-card>
                 <v-img :src="product.avatar" height="200"></v-img>
+                <div v-if="!product.editing">
                 <v-card-title>{{ product.name }}</v-card-title>
                 <v-card-subtitle>{{ product.points }}</v-card-subtitle>
-                <v-card-text>{{ product.description }}</v-card-text>
-                <v-btn @click="modificar(product.id)" class="btn-modificar" size="small">Modificar</v-btn>
+                <v-card-text>
+                    {{ product.description }}</v-card-text></div>
+                <div v-else>
+                    <v-card-text>
+              <v-form @submit.prevent="saveChanges(product)">
+                <v-text-field v-model="product.newName" label="Nombre" outlined></v-text-field>
+                <v-text-field v-model="product.newPoints" label="Puntos" outlined></v-text-field>
+                <v-text-field v-model="product.newDescription" label="Descripcion" outlined></v-text-field>
+                <v-btn type="submit" color="primary">Guardar</v-btn>
+              </v-form>
+            </v-card-text>
+            </div>
+       
+                <v-card-actions>
+            <v-btn v-if="!product.editing" @click="toggleEditing(product)">Editar</v-btn>
+          </v-card-actions>
                 <v-btn @click="eliminar(product.id)" class="btn-eliminar" size="small">Eliminar</v-btn>
               </v-card>
             </v-col>
@@ -37,7 +52,9 @@
     data() {
         return {
             products: [],
-            elemento: {},mostrarFormulario: false,
+            elemento: {},
+            mostrarFormulario: false,
+            editFormulario: false,
         };
     },
     mounted() {
@@ -64,8 +81,24 @@
                 alert("error de conexion");
             }
         },
-        async modificar(id) {
-            const elemento = { ...this.elemento };
+        toggleEditing(product) {
+            product.editing = !product.editing;
+            product.newName = product.name,
+            product.newPoints = product.points,
+            product.newDescription = product.description}
+            ,
+      saveChanges(product) {
+        
+      // Realizar una solicitud PUT o PATCH a la API para guardar los cambios en el objeto correspondiente
+      // Actualizar this.items con los datos recibidos de la API
+      product.description = product.newDescription;
+      product.name = product.newName,
+      product.points =product.newPoints,
+      product.editing = false;
+      this.modificar(product.id, product)
+    },
+        async modificar(id, elemento) {
+            
             try {
                 await productsList.modificarElemento(id, elemento);
                 this.cargarProducts();
@@ -73,7 +106,8 @@
             catch (error) {
                 alert("error de conexion");
             }
-        },async agregarElemento() {
+        },
+        async agregarElemento() {
       const elemento = {...this.elemento}
       try {
         await productsList.agregarElemento(elemento)
