@@ -1,10 +1,10 @@
 <template>
-    <v-app>
-      <v-content>
+    <v-app >
+      <v-content >
         <v-container fluid>
           <v-row align="center" justify="center">
             <v-col cols="12" sm="8" md="6">
-              <v-card class="elevation-12">
+              <v-card class="elevation-12" id="formulario">
                 <v-card-title class="text-center">Registro de Usuario</v-card-title>
                 <v-card-text>
                   <v-form @submit.prevent="register">
@@ -53,7 +53,7 @@
         ],
         emailRules: [
           (value) => !!value || 'El email es requerido',
-          (value) => /^\w+([-+.']\w+)@\w+([-.]\w+)\.\w+([-.]\w+)*$/.test(value) || 'Ingrese un email válido'
+          (value) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(value) || 'Ingrese un email válido'
         ],
         dniRules: [
           (value) => !!value || 'El DNI es requerido',
@@ -102,5 +102,11 @@
     }
     .text-center {
       text-align: center;
+    }
+
+    #formulario{
+      position: relative;
+      left:0;
+      top:60px;
     }
   </style>

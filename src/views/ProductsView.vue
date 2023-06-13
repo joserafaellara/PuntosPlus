@@ -34,11 +34,12 @@
             </v-card-text>
             </div>
        
-                <v-card-actions>
-            <v-btn v-if="!product.editing" @click="toggleEditing(product)">Editar</v-btn>
-          </v-card-actions>
+              <v-card-actions>
+                <v-btn v-if="!product.editing" @click="toggleEditing(product)" class="btn-modificar" size="small">Editar</v-btn>
                 <v-btn @click="eliminar(product.id)" class="btn-eliminar" size="small">Eliminar</v-btn>
-              </v-card>
+              </v-card-actions>
+              
+            </v-card>
             </v-col>
           </v-row>
         </v-container>
@@ -127,11 +128,14 @@
   <style>
     .btn-modificar{
     background-color:darkkhaki !important;
+    position:relative;
     margin: 10px;
     }
 
   .btn-eliminar{
     background-color: chocolate !important;
+    position: relative;
+    margin: 10px;
     }
 
   #contenedor-info{

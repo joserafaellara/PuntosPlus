@@ -1,11 +1,10 @@
 <template>
     <v-app>
       <v-content>
-        <v-container fluid>
+        <v-container fluid id="contenedor-info">
           <v-row align="center" justify="center">
             <v-col cols="12" sm="8" md="6">
               <v-card class="elevation-12">
-                <v-img src="./assets/login-background.jpg" aspect-ratio="1.5"></v-img>
                 <v-card-text>
                   <v-form @submit.prevent="login">
                     <v-text-field v-model="username" label="Usuario" prepend-icon="mdi-account"></v-text-field>
@@ -48,5 +47,13 @@
     }
     .v-btn {
       margin-top: 16px;
+    }
+
+    #contenedor-info{
+      position: relative;
+      left:0;
+      top:60px;
+      max-width:80%;
+      margin:left;
     }
   </style>
