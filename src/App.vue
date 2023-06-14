@@ -1,3 +1,45 @@
+
+<script>
+import { storeToRefs } from "pinia";
+import {useLoginStore} from './stores/login'
+export default {
+  data() {
+    return {
+      drawer: true,
+      miniVariant: false,
+      clipped: false,
+      menuItems: [
+        { title: 'Productos', icon: 'mdi-cart', route: '/products' },
+        { title: 'Registrarse', icon: 'mdi-account-plus', route: '/register' },
+        { title: 'Registrar Venta', icon: 'mdi-account-cash', route: '/registerpoint' }
+      ],
+      miniVariantWidth: 960 // Ancho en píxeles en el que se cambia al modo mini-variant
+    };
+  },
+  mounted() {
+    window.addEventListener('resize', this.handleResize);
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.handleResize);
+  },
+  methods: {
+    toggleDrawer() {
+      this.drawer = !this.drawer;
+    },
+    handleResize() {
+      if (window.innerWidth <= this.miniVariantWidth && !this.drawer) {
+        this.drawer = true;
+      }
+    }
+  },
+  setup() {
+    const store = useLoginStore();
+    const { isLogin, user } = storeToRefs(store)
+    return { isLogin, user }
+  },
+};
+</script>
+
 <template>
   <v-app>
     <v-navigation-drawer
@@ -23,6 +65,7 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      
     </v-navigation-drawer>
 
     <v-app-bar
@@ -32,51 +75,23 @@
       class="menu-bar"
     >
       <v-app-bar-nav-icon @click.stop="toggleDrawer"></v-app-bar-nav-icon>
-      <v-toolbar-title>My Website</v-toolbar-title>
+      <v-toolbar-title>Puntos Plus</v-toolbar-title>
+      <v-avatar class="mr-2" v-if="isLogin" image="../images/avatar.jpg" size="38"></v-avatar>
+      <span v-if="isLogin">User: {{ user.mail }}</span>
+      <v-bottom  color="primary"> 
+        <v-btn v-if="!isLogin" to="login"> <v-icon left>mdi-login</v-icon> Ir a Login </v-btn>
+        
+        <v-btn v-if="isLogin" to="logout"> <v-icon left>mdi-logout</v-icon> Ir a Logout </v-btn>
+        
+      </v-bottom>
     </v-app-bar>
 
     <v-content class="page-content">
       <router-view></router-view>
     </v-content>
+    
   </v-app>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      drawer: true,
-      miniVariant: false,
-      clipped: false,
-      menuItems: [
-        { title: 'Iniciar sesión', icon: 'mdi-login', route: '/login' },
-        { title: 'Productos', icon: 'mdi-cart', route: '/products' },
-        { title: 'Registrarse', icon: 'mdi-account-plus', route: '/register' },
-        { title: 'Registrar Venta', icon: 'mdi-account-cash', route: '/registerpoint' }
-      ],
-      miniVariantWidth: 960 // Ancho en píxeles en el que se cambia al modo mini-variant
-    };
-  },
-  mounted() {
-    window.addEventListener('resize', this.handleResize);
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.handleResize);
-  },
-  methods: {
-    toggleDrawer() {
-      this.drawer = !this.drawer;
-    },
-    handleResize() {
-      if (window.innerWidth <= this.miniVariantWidth && !this.drawer) {
-        this.drawer = true;
-      }
-    }
-  }
-};
-</script>
-
-
 
 <style>
 .menu-bar {

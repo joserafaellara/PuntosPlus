@@ -7,8 +7,8 @@
               <v-card class="elevation-12">
                 <v-card-text>
                   <v-form @submit.prevent="login">
-                    <v-text-field v-model="username" label="Usuario" prepend-icon="mdi-account"></v-text-field>
-                    <v-text-field v-model="password" label="Contraseña" type="password" prepend-icon="mdi-lock"></v-text-field>
+                    <v-text-field v-model="usuario.mail" label="Mail" prepend-icon="mdi-account"></v-text-field>
+                    <v-text-field v-model="usuario.password" label="Contraseña" type="password" prepend-icon="mdi-lock"></v-text-field>
                     <v-btn color="primary" block type="submit">Iniciar Sesión</v-btn>
                   </v-form>
                 </v-card-text>
@@ -21,19 +21,39 @@
   </template>
   
   <script>
+  import { useLoginStore } from '../stores/login';
+
   export default {
+    setup() {
+    const store = useLoginStore();
+    const { login } = store
+    return { login }
+  },
     data() {
-      return {
-        username: '',
+      return { usuario:
+        {
+        mail: '',
         password: ''
+        }
       };
     },
     methods: {
+      
       login() {
-        // Lógica para verificar las credenciales y realizar el inicio de sesión
-        console.log('Iniciando sesión con usuario:', this.username, 'y contraseña:', this.password);
+      // consultar api por usuario
+      // por hoy hardcodeamos
+      if(this.usuario.mail=="usuario@test.com" && this.usuario.password=="123456") {
+        this.login({mail:this.usuario.mail})
+        this.$router.push("/")
+      } else if(this.usuario.mail=="admin@test.com" && this.usuario.password=="123456") {
+        this.login({mail:this.usuario.mail})
+        this.$router.push("/")
+      } else {
+        alert('Credenciales erroneas')
       }
     }
+      },
+    
   };
   </script>
   

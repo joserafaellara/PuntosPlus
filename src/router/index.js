@@ -1,9 +1,11 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import LoginView from '../views/LoginView.vue'
+import LogoutView from '../views/LogoutView.vue'
 import ProductsView from '../views/ProductsView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import RegisterpointView from '../views/RegisterpointView.vue'
+import { useLoginStore } from '../stores/login'
 
 
 const router = createRouter({
@@ -20,6 +22,11 @@ const router = createRouter({
       component: LoginView
     },
     {
+      path: '/logout',
+      name: 'logout',
+      component: LogoutView
+    },
+    {
       path: '/products',
       name: 'products',
       component: ProductsView
@@ -32,7 +39,8 @@ const router = createRouter({
     {
       path: '/registerpoint',
       name: 'registerpoint',
-      component: RegisterpointView
+      component: RegisterpointView,
+      meta:{RequireAuth: true}
     },
     {
       path: '/about',
@@ -43,6 +51,14 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     }
   ]
+})
+router.beforeEach((to, from, next) => {
+  const store = useLoginStore();
+  if (to.matched.some(r => r.meta.RequireAuth) && !store.isLogin) {
+    next('/login')
+  } else {
+    next()
+  }
 })
 
 export default router
