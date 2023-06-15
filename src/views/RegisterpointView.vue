@@ -1,15 +1,15 @@
 <template>
-    <v-app>
-      <v-content>
-        <v-container fluid id="contenedor-info">
-          <v-row>
-            <!-- Primera sección - Registro de monto -->
-            <v-col cols="6">
-              <v-card class="elevation-12">
-                <v-card-title>Registro de Monto</v-card-title>
-                <v-card-text>
-                  <v-form @submit.prevent="registerMonto">
-                    <v-text-field v-model="dni" label="DNI" :rules="dniRules"></v-text-field>
+  <v-app>
+    <v-content>
+      <v-container fluid id="contenedor-info">
+        <v-row v-if="showMenuOption">
+          <!-- Primera sección - Registro de monto -->
+          <v-col cols="6">
+            <v-card class="elevation-12">
+              <v-card-title>Registro de Monto</v-card-title>
+              <v-card-text>
+                <v-form @submit.prevent="registerMonto">
+                  <v-text-field v-model="dni" label="DNI" :rules="dniRules"></v-text-field>
                     <v-text-field v-model="monto" label="Monto" type="number" :rules="montoRules"></v-text-field>
                     <v-btn color="primary" block type="submit">Registrar Monto</v-btn>
                   </v-form>

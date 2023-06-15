@@ -6,7 +6,7 @@ import ProductsView from '../views/ProductsView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import RegisterpointView from '../views/RegisterpointView.vue'
 import { useLoginStore } from '../stores/login'
-
+import ConfigView from '../views/ConfigView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,6 +27,12 @@ const router = createRouter({
       component: LogoutView
     },
     {
+      path: '/config',
+      name: 'config',
+      component: ConfigView,
+      meta: { RequireAuth: true }
+    },
+    {
       path: '/products',
       name: 'products',
       component: ProductsView
@@ -40,21 +46,19 @@ const router = createRouter({
       path: '/registerpoint',
       name: 'registerpoint',
       component: RegisterpointView,
-      meta:{RequireAuth: true}
+      meta: { RequireAuth: true }
     },
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue')
     }
   ]
 })
+
 router.beforeEach((to, from, next) => {
-  const store = useLoginStore();
-  if (to.matched.some(r => r.meta.RequireAuth) && !store.isLogin) {
+  const store = useLoginStore()
+  if (to.matched.some((r) => r.meta.RequireAuth) && !store.isLogin) {
     next('/login')
   } else {
     next()

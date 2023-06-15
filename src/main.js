@@ -20,11 +20,10 @@ const vuetify = createVuetify({
 
 
 const app = createApp(App)
+app.use(createPinia()) // Usa Pinia
 app.use(vuetify)
-app.use(createPinia())
 app.use(router)
 .mount('#app')
-
 
 
 

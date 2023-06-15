@@ -1,20 +1,27 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
+
 export const useLoginStore = defineStore('login', {
-state: () => {
-return { isLogin: false, user: { mail: '' } }
-},
-getters:{
-    isLoginn(){
-        return this.isLogin
+  state: () => ({
+    user: { mail: '', permissions: [] }
+  }),
+
+  getters: {
+    isLogin(state) {
+      return state.user.mail === 'admin@test.com';
     }
-},
-actions: {
-logout() {
-this.isLogin = false
-},
-login(user) {
-this.isLogin = true
-this.user = user
-}
-},
-})
+  },
+
+  actions: {
+    logout() {
+      this.user = { mail: '', permissions: [] };
+    },
+
+    login(user) {
+      this.user = { ...user };
+    },
+
+    hasPermissions(access) {
+      return this.user.permissions.filter(p => p === access).length > 0 ? true : false;
+    }
+  }
+});

@@ -42,16 +42,16 @@
       login() {
       // consultar api por usuario
       // por hoy hardcodeamos
-      if(this.usuario.mail=="usuario@test.com" && this.usuario.password=="123456") {
-        this.login({mail:this.usuario.mail})
-        this.$router.push("/")
-      } else if(this.usuario.mail=="admin@test.com" && this.usuario.password=="123456") {
-        this.login({mail:this.usuario.mail})
-        this.$router.push("/")
-      } else {
-        alert('Credenciales erroneas')
-      }
+      if (this.usuario.mail == "usuario@test.com" && this.usuario.password == "123456") {
+      this.login({ mail: this.usuario.mail });
+      this.$router.push("/");
+    } else if (this.usuario.mail == "admin@test.com" && this.usuario.password == "123456") {
+      this.login({ mail: this.usuario.mail, permissions: ["config"] }); // Asignar el permiso de "configuración"
+      this.$router.push("/");
+    } else {
+      alert("Credenciales erróneas");
     }
+  }
       },
     
   };
