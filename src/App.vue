@@ -1,7 +1,8 @@
 
 <script>
 import { storeToRefs } from "pinia";
-import {useLoginStore} from './stores/login'
+import { useLoginStore } from "./stores/login";
+
 export default {
   data() {
     return {
@@ -10,7 +11,7 @@ export default {
       clipped: false,
       menuItems: [
         { title: 'Productos', icon: 'mdi-cart', route: '/products' },
-        { title: 'Registrarse', icon: 'mdi-account-plus', route: '/register' },
+        { title: 'Registrarse', icon: 'mdi-account-plus', route: '/register'},
         { title: 'Registrar Venta', icon: 'mdi-account-cash', route: '/registerpoint' }
       ],
       miniVariantWidth: 960 // Ancho en píxeles en el que se cambia al modo mini-variant
@@ -30,12 +31,24 @@ export default {
       if (window.innerWidth <= this.miniVariantWidth && !this.drawer) {
         this.drawer = true;
       }
+    },
+    showMenuItem(item){
+      if (item.title === 'Registrarse') {
+      return !this.isLogin;
+    }
+    else if(item.title === 'Registrar Venta'){
+      return this.isLogin && this.hasPermissions('registerpoint')
+    }else {
+     
+      return true;
+    }
     }
   },
   setup() {
     const store = useLoginStore();
     const { isLogin, user } = storeToRefs(store)
-    return { isLogin, user }
+    const { hasPermissions} = store
+    return { isLogin, user , hasPermissions}
   },
 };
 </script>
@@ -51,8 +64,9 @@ export default {
       class="menu-drawer"
     >
       <v-list>
+        <template v-for ="item in menuItems"> 
         <v-list-item
-          v-for="item in menuItems"
+          v-if="showMenuItem(item)"
           :key="item.title"
           :to="item.route"
           link
@@ -64,6 +78,7 @@ export default {
             <v-list-item-title>{{ item.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+      </template>
       </v-list>
       
     </v-navigation-drawer>

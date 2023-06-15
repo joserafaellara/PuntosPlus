@@ -43,10 +43,10 @@
       // consultar api por usuario
       // por hoy hardcodeamos
       if(this.usuario.mail=="usuario@test.com" && this.usuario.password=="123456") {
-        this.login({mail:this.usuario.mail})
+        this.login({mail:this.usuario.mail,permissions:[]})
         this.$router.push("/")
       } else if(this.usuario.mail=="admin@test.com" && this.usuario.password=="123456") {
-        this.login({mail:this.usuario.mail})
+        this.login({mail:this.usuario.mail, permissions:['registerpoint']})
         this.$router.push("/")
       } else {
         alert('Credenciales erroneas')
