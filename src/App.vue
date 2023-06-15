@@ -37,7 +37,7 @@ export default {
       return !this.isLogin;
     }
     else if(item.title === 'Registrar Venta'){
-      return this.isLogin && this.hasPermissions('registerpoint')
+      return this.isLogin && this.hasPermissions('admin')
     }else {
      
       return true;

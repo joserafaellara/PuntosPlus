@@ -1,5 +1,7 @@
 <script>
   import productsList from '../service/productsList'
+  import { storeToRefs } from "pinia";
+  import { useLoginStore } from "../stores/login";
   export default {
     data() {
         return {
@@ -71,7 +73,13 @@
       }
     },
 
-    }  
+    } ,
+    setup() {
+    const store = useLoginStore();
+    const {  user } = storeToRefs(store)
+    const { hasPermissions} = store
+    return { user , hasPermissions}
+  }, 
 }
   
   </script>
@@ -80,7 +88,7 @@
     <v-app>
       <v-content>
         <v-container id="contenedor-info">
-            <v-btn style="margin:15px;" color="primary" @click="mostrarFormulario = !mostrarFormulario">{{mostarFormulario ? 'Cancelar' : 'Agregar'}}</v-btn>
+            <v-btn v-if ="hasPermissions('admin')" style="margin:15px;" color="primary" @click="mostrarFormulario = !mostrarFormulario">{{mostarFormulario ? 'Cancelar' : 'Agregar'}}</v-btn>
             <div v-if="mostrarFormulario">
                 <v-form class="formulario">
       <v-text-field v-model="elemento.name" label="Nombre" ></v-text-field>
@@ -112,7 +120,7 @@
             </v-card-text>
             </div>
        
-              <v-card-actions>
+              <v-card-actions v-if ="hasPermissions('admin')">
                 <v-btn v-if="!product.editing" @click="toggleEditing(product)" class="btn-modificar" size="small">Editar</v-btn>
                 <v-btn @click="eliminar(product.id)" class="btn-eliminar" size="small">Eliminar</v-btn>
               </v-card-actions>

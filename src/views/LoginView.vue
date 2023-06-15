@@ -46,7 +46,7 @@
         this.login({mail:this.usuario.mail,permissions:[]})
         this.$router.push("/")
       } else if(this.usuario.mail=="admin@test.com" && this.usuario.password=="123456") {
-        this.login({mail:this.usuario.mail, permissions:['registerpoint']})
+        this.login({mail:this.usuario.mail, permissions:['admin']})
         this.$router.push("/")
       } else {
         alert('Credenciales erroneas')
