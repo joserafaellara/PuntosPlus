@@ -12,7 +12,8 @@ export default {
       menuItems: [
         { title: 'Productos', icon: 'mdi-cart', route: '/products' },
         { title: 'Registrarse', icon: 'mdi-account-plus', route: '/register'},
-        { title: 'Registrar Venta', icon: 'mdi-account-cash', route: '/registerpoint' }
+        { title: 'Registrar Venta', icon: 'mdi-account-cash', route: '/registerpoint' },
+        { title: 'Clientes', icon: 'mdi-account-group', route: '/clients' }
       ],
       miniVariantWidth: 960 // Ancho en píxeles en el que se cambia al modo mini-variant
     };
@@ -38,8 +39,9 @@ export default {
     }
     else if(item.title === 'Registrar Venta'){
       return this.isLogin && this.hasPermissions('admin')
+    }else if(item.title === 'Clientes'){
+      return this.isLogin && this.hasPermissions('admin')
     }else {
-     
       return true;
     }
     }

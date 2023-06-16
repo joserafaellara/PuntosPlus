@@ -6,7 +6,7 @@ import ProductsView from '../views/ProductsView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import RegisterpointView from '../views/RegisterpointView.vue'
 import { useLoginStore } from '../stores/login'
-
+import ClientsView from '../views/ClientsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -35,6 +35,12 @@ const router = createRouter({
       path: '/register',
       name: 'register',
       component: RegisterView
+    },
+    {
+      path: '/clients',
+      name: 'clients',
+      component: ClientsView,
+      meta:{RequireAuth: true}
     },
     {
       path: '/registerpoint',
