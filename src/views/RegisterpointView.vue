@@ -25,7 +25,8 @@
                   <div v-if="cliente">
                     <p>Nombre: {{ cliente.nombre }}</p>
                     <p>Apellido: {{ cliente.apellido }}</p>
-                    <p>Monto total: {{ montoTotal }}</p>
+                    <p>Puntos total: {{ cliente.puntos }}</p>
+                    <p>ID: {{ this.id }}</p>
                   </div>
                   <div v-else>
                     <p>No se ha registrado un cliente aún.</p>
@@ -40,6 +41,7 @@
   </template>
   
   <script>
+  import usersList from '../service/usersList'
   export default {
     data() {
       return {
@@ -47,33 +49,50 @@
         monto: '',
         dniRules: [
           (value) => !!value || 'El DNI es requerido',
-          (value) => /^\d{7}$/.test(value) || 'Ingrese un DNI válido'
+          (value) => /^\d{2}$/.test(value) || 'Ingrese un DNI válido'
         ],
         montoRules: [
           (value) => !!value || 'El monto es requerido',
           (value) => Number(value) > 0 || 'Ingrese un monto válido'
         ],
-        cliente: null
+        id : '',
+        users: [],
+        cliente: {},
+
       };
     },
-    computed: {
-      montoTotal() {
-        return this.cliente ? this.cliente.monto + Number(this.monto) : 0;
-      }
-    },
     methods: {
-      registerMonto() {
-        // Lógica para registrar el monto
-        // Aquí puedes realizar una solicitud a una API para guardar los datos
-        this.cliente = {
-          dni: this.dni,
-          monto: Number(this.monto)
-        };
-  
+        registerMonto() {
+ 
+        this.cliente =  this.buscarCliente(this.dni) 
+        const acu = Math.ceil(this.monto / 10)
+        this.cliente.puntos = acu,
+          this.modificar(this.id, this.cliente)
+        
         // Limpiar los campos del formulario después del registro
         this.dni = '';
         this.monto = '';
-      }
+      },
+        async modificar(id, cliente) {
+            
+            try {
+              
+                await usersList.modificarCliente(id, cliente);
+            }
+            catch (error) {
+                alert("falle aca");
+            }
+        },
+        async buscarCliente(dni) {
+            
+            try {
+               this.cliente = await usersList.searchCliente(dni);
+               this.id = this.cliente.id
+            }
+            catch (error) {
+                alert("cliente no encontrado");
+            }
+        },
     }
   };
   </script>

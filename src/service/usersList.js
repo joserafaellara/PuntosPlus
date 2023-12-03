@@ -30,11 +30,19 @@ export default {
             throw "Error de conexion"
         }
     },
-    async modificarCliente(id,cliente) {
+    async modificarCliente(id, cliente) {
         try {
             await apiClient.put(`/users/${id}`, cliente)
         } catch( error ) {
             throw "Error de conexion"
+        }
+    },
+    async searchCliente(dni) {
+        try {
+            const cliente = await apiClient.get(`/users?dni=${dni}`)
+            return cliente.data[0]
+        } catch( error ) {
+            throw "Usuario no encontrado"
         }
     }
 
