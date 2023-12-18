@@ -66,14 +66,14 @@ export default {
         alert("Error al agregar producto: " + error);
       }
     },
-      async saveProductEdits(editedProduct) {
-      try {
-        console.log(editedProduct);
-        await productsList.modificarElemento(editedProduct.id, editedProduct);
-        this.cargarProducts();
-      } catch (error) {
-        alert("Error al guardar los cambios: " + error);
-      }
+    async saveProductEdits(editedProduct) {
+        console.log("Producto editado:", editedProduct);
+        try {
+            await productsList.modificarElemento(editedProduct.id, editedProduct);
+            this.cargarProducts(); // Recargar los productos
+        } catch (error) {
+            alert("Error al guardar los cambios: " + error);
+        }
     },
     async eliminar(id) {
       try {
@@ -84,9 +84,9 @@ export default {
       }
     },
     toggleEditing(product) {
-      this.products = this.products.map(p => 
-        p.id === product.id ? { ...p, editing: !p.editing } : p
-      );
+        this.products = this.products.map(p => 
+            p.id === product.id ? { ...p, editing: !p.editing } : p
+        );
     },
     
   },

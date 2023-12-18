@@ -1,11 +1,11 @@
 <template>
-    <v-text-field
-      :value="modelValue"
-      @change="$emit('update:modelValue', $event.target.value)"
-      :label="label"
-      :type="type"
-    ></v-text-field>
-  </template>
+  <v-text-field
+    :value="modelValue"
+    @input="$emit('update:modelValue', $event.target.value)"
+    :label="label"
+    :type="type"
+  ></v-text-field>
+</template>
   
   <script>
   export default {

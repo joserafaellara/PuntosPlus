@@ -15,7 +15,10 @@
       InputFieldComponent
     },
     props: {
-      product: Object
+      product: {
+      type: Object,
+      default: () => ({})
+  }
     },
     data() {
       return {

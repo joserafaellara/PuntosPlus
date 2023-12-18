@@ -9,11 +9,11 @@
         </v-row>
         <v-row>
           <v-col cols="12">
-            <v-card id="slider">
+            <v-card id="slider" >
               <v-carousel hide-delimiters>
                 <v-carousel-item v-for="slide in slides" :key="slide.id">
-                  <v-sheet height="300" style="width: 100%">
-                    <v-img :src="slide.image" height="100%"></v-img>
+                  <v-sheet  style="width: 100%">
+                    <v-img :src="slide.image" id="imgs" height="100%" width="100%" ></v-img>
                     <div class="slide-caption">{{ slide.caption }}</div>
                   </v-sheet>
                 </v-carousel-item>
@@ -46,7 +46,7 @@ export default {
       slides: [
       {
           id: 1,
-          image: "../images/logo.jfif",
+          image: "../images/slide3.jpg",
           caption: "Imagen 2",
         },
         {
@@ -77,6 +77,12 @@ export default {
   color: white;
   font-weight: bold;
   font-size: 18px;
+}
+
+#imgs{
+  width: 100% !important;
+  height:100% !important;
+  object-fit: cover !important;
 }
 
 @media (max-width: 600px) {

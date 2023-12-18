@@ -42,12 +42,16 @@
 
         const edit = () => {
         // Preparar el producto para la edición
+        console.log(`edit: ${JSON.stringify(props.product)}`)
+        console.log(`edit: ${JSON.stringify(editedProduct)}`)
         Object.assign(editedProduct, props.product);
         emit('edit-product', props.product);
         };
 
         const saveEdits = () => {
         // Emitir el evento con los datos editados
+        console.log(`save edits: ${JSON.stringify(props.product)}`)
+        console.log(`save edits: ${JSON.stringify(editedProduct)}`)
         emit('save-edits', editedProduct);
         };
 
