@@ -1,7 +1,7 @@
 <template>
     <v-text-field
       :value="modelValue"
-      @input="$emit('update:modelValue', $event)"
+      @change="$emit('update:modelValue', $event.target.value)"
       :label="label"
       :type="type"
     ></v-text-field>
@@ -17,7 +17,7 @@
       label: String,
       type: {
         type: String,
-        default: 'text' // Puede ser 'text', 'number', 'password', etc.
+        default: 'text' // Puede ser 'text', 'number', 'textarea', etc.
       }
     },
     emits: ['update:modelValue']

@@ -68,6 +68,7 @@ export default {
     },
       async saveProductEdits(editedProduct) {
       try {
+        console.log(editedProduct);
         await productsList.modificarElemento(editedProduct.id, editedProduct);
         this.cargarProducts();
       } catch (error) {
@@ -100,7 +101,6 @@ export default {
 </script>
 
 <style>
-/* Tus estilos */
 .formulario {
   margin: 20px;
 }
