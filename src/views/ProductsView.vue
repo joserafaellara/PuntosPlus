@@ -1,161 +1,114 @@
-<script>
-  import productsList from '../service/productsList'
-  import { storeToRefs } from "pinia";
-  import { useLoginStore } from "../stores/login";
-  export default {
-    data() {
-        return {
-            products: [],
-            elemento: {},
-            mostrarFormulario: false,
-            editFormulario: false,
-        };
-    },
-    mounted() {
-        this.cargarProducts();
-    },
-    methods: {
-        irAbout() {
-            this.$router.push("/about");
-        },
-        async cargarProducts() {
-            try {
-                this.products = await productsList.cargarProducts();
-            }
-            catch (error) {
-                alert("error de conexion");
-            }
-        },
-        async eliminar(id) {
-            try {
-                await productsList.eliminarElemento(id);
-                this.cargarProducts();
-            }
-            catch (error) {
-                alert("error de conexion");
-            }
-        },
-        toggleEditing(product) {
-            product.editing = !product.editing;
-            product.newName = product.name,
-            product.newPoints = product.points,
-            product.newDescription = product.description}
-            ,
-      saveChanges(product) {
+<template>
+  <v-app>
+    <v-main>
+      <v-container id="contenedor-info">
+        <v-btn v-if="hasPermissions('admin')" style="margin:15px;" color="primary" @click="mostrarFormulario = !mostrarFormulario">
+          {{ mostrarFormulario ? 'Cancelar' : 'Agregar' }}
+        </v-btn>
         
-      // Realizar una solicitud PUT o PATCH a la API para guardar los cambios en el objeto correspondiente
-      // Actualizar this.items con los datos recibidos de la API
-      product.description = product.newDescription;
-      product.name = product.newName,
-      product.points =product.newPoints,
-      product.editing = false;
-      this.modificar(product.id, product)
-    },
-        async modificar(id, elemento) {
-            
-            try {
-                await productsList.modificarElemento(id, elemento);
-                this.cargarProducts();
-            }
-            catch (error) {
-                alert("error de conexion");
-            }
-        },
-        async agregarElemento() {
-      const elemento = {...this.elemento}
+        <div v-if="mostrarFormulario">
+          <v-form class="formulario">
+            <v-text-field v-model="elemento.name" label="Nombre"></v-text-field>
+            <v-textarea v-model="elemento.description" label="Descripcion"></v-textarea>
+            <v-text-field v-model="elemento.points" label="Puntos"></v-text-field>
+            <v-btn color="primary" @click="agregarElemento">Confirmar</v-btn>
+          </v-form>
+        </div>
+
+        <product-list-component
+          :products="products"
+          @edit-product="toggleEditing"
+          @delete-product="eliminar"
+          @save-edits="saveProductEdits"
+        ></product-list-component>
+      </v-container>
+    </v-main>
+  </v-app>
+</template>
+
+<script>
+import ProductListComponent from '@/components/ProductListComponent.vue';
+import productsList from '@/service/productsList.js'; 
+import { storeToRefs } from "pinia";
+import { useLoginStore } from "@/stores/login";
+
+export default {
+  components: {
+    'product-list-component': ProductListComponent
+  },
+  data() {
+    return {
+      products: [],
+      elemento: {},
+      mostrarFormulario: false,
+      editFormulario: false,
+    };
+  },
+  mounted() {
+    this.cargarProducts();
+  },
+  methods: {
+    async cargarProducts() {
       try {
-        await productsList.agregarElemento(elemento)
-        this.cargarProducts()
-        this.elemento = {}
+        const response = await productsList.cargarProducts();
+        this.products = response.map(product => ({ ...product, editing: false }));
       } catch (error) {
-        alert(error)
-        console.log(error);
+        alert("Error de conexión: " + error);
       }
     },
-
-    } ,
-    setup() {
-    const store = useLoginStore();
-    const {  user } = storeToRefs(store)
-    const { hasPermissions} = store
-    return { user , hasPermissions}
-  }, 
-}
-  
-  </script>
-
-<template>
-    <v-app>
-      <v-content>
-        <v-container id="contenedor-info">
-            <v-btn v-if ="hasPermissions('admin')" style="margin:15px;" color="primary" @click="mostrarFormulario = !mostrarFormulario">{{mostarFormulario ? 'Cancelar' : 'Agregar'}}</v-btn>
-            <div v-if="mostrarFormulario">
-                <v-form class="formulario">
-      <v-text-field v-model="elemento.name" label="Nombre" ></v-text-field>
-      <v-textarea v-model="elemento.description" label="Descripcion" ></v-textarea>
-      <v-text-field v-model="elemento.points" label="Puntos" ></v-text-field>
-      <v-btn color="primary" @click="agregarElemento">Confirmar</v-btn>
+    async agregarElemento() {
+      try {
+        await productsList.agregarElemento(this.elemento);
+        this.mostrarFormulario = false;
+        this.elemento = {}; // Limpiar el formulario
+        await this.cargarProducts(); // Recargar la lista de productos
+      } catch (error) {
+        alert("Error al agregar producto: " + error);
+      }
+    },
+      async saveProductEdits(editedProduct) {
+      try {
+        await productsList.modificarElemento(editedProduct.id, editedProduct);
+        this.cargarProducts();
+      } catch (error) {
+        alert("Error al guardar los cambios: " + error);
+      }
+    },
+    async eliminar(id) {
+      try {
+        await productsList.eliminarElemento(id);
+        await this.cargarProducts(); // Recargar la lista de productos
+      } catch (error) {
+        alert("Error al eliminar producto: " + error);
+      }
+    },
+    toggleEditing(product) {
+      this.products = this.products.map(p => 
+        p.id === product.id ? { ...p, editing: !p.editing } : p
+      );
+    },
     
-    </v-form>
-            </div>
-            
-            
-          <v-row>
-            <v-col v-for="product in products" :key="product.id" cols="6" sm="4" md="3">
-                <v-card>
-                <v-img :src="product.avatar" height="200"></v-img>
-                <div v-if="!product.editing">
-                <v-card-title>{{ product.name }}</v-card-title>
-                <v-card-subtitle>{{ product.points }}</v-card-subtitle>
-                <v-card-text>
-                    {{ product.description }}</v-card-text></div>
-                <div v-else>
-                    <v-card-text>
-              <v-form @submit.prevent="saveChanges(product)">
-                <v-text-field v-model="product.newName" label="Nombre" outlined></v-text-field>
-                <v-text-field v-model="product.newPoints" label="Puntos" outlined></v-text-field>
-                <v-text-field v-model="product.newDescription" label="Descripcion" outlined></v-text-field>
-                <v-btn type="submit" color="primary">Guardar</v-btn>
-              </v-form>
-            </v-card-text>
-            </div>
-       
-              <v-card-actions v-if ="hasPermissions('admin')">
-                <v-btn v-if="!product.editing" @click="toggleEditing(product)" class="btn-modificar" size="small">Editar</v-btn>
-                <v-btn @click="eliminar(product.id)" class="btn-eliminar" size="small">Eliminar</v-btn>
-              </v-card-actions>
-              
-            </v-card>
-            </v-col>
-          </v-row>
-        </v-container>
-      </v-content>
-    </v-app>
-  </template>
-  
-  
-  
-  <style>
-    .btn-modificar{
-    background-color:darkkhaki !important;
-    position:relative;
-    margin: 10px;
-    }
+  },
+  setup() {
+    const store = useLoginStore();
+    const { user } = storeToRefs(store);
+    const hasPermissions = store.hasPermissions; // Accediendo al getter
 
-  .btn-eliminar{
-    background-color: chocolate !important;
-    position: relative;
-    margin: 10px;
-    }
+    return { user, hasPermissions };
+  }
+};
+</script>
 
-  #contenedor-info{
+<style>
+/* Tus estilos */
+.formulario {
+  margin: 20px;
+}
+#contenedor-info {
   position: relative;
-  left:10%;
-  top:60px;
-  max-width:80%;
-  margin:left;
+  left: 10%;
+  top: 60px;
+  max-width: 80%;
+  margin: left;
 }
-.formulario{
-    margin:20px;
-}
-  </style>
+</style>

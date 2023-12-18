@@ -1,11 +1,12 @@
-import axios from 'axios'
+import axios from 'axios';
+
 const apiClient = axios.create({
-    baseURL: 'https://64860418a795d24810b79964.mockapi.io/api/v1/',
+    baseURL: 'https://657b3d4d394ca9e4af14097c.mockapi.io/',
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'
     }
-})
+});
 
 export default {
     async cargarUsers() {
@@ -44,6 +45,13 @@ export default {
         } catch( error ) {
             throw "Usuario no encontrado"
         }
+    },
+    async searchClienteXMail(mail) {
+        try {
+            const response = await apiClient.get(`/users?mail=${mail}`);
+            return response.data[0];
+        } catch (error) {
+            throw new Error("Usuario no encontrado");
+        }
     }
-
 }

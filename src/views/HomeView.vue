@@ -1,10 +1,10 @@
 <template>
   <v-app>
-    <v-content>
-      <v-container id="contenedor-info" style="position:relative">
+    <v-main>
+      <v-container class="container-info">
         <v-row>
           <v-col cols="12">
-            <h2>Información de la Empresa</h2>
+            <h2 class="center">Información de la Empresa</h2>
           </v-col>
         </v-row>
         <v-row>
@@ -35,7 +35,7 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-content>
+    </v-main>
   </v-app>
 </template>
 
@@ -62,13 +62,12 @@ export default {
 </script>
 
 <style>
-
-#contenedor-info{
-  position: relative;
-  left:10%;
-  top:0;
-  max-width:80%;
-  margin:left;
+.container-info{
+  max-width: 90% !important;
+  margin:auto !important;
+}
+.center {
+  text-align: center;
 }
 
 .slide-caption {

@@ -8,6 +8,7 @@ import RegisterpointView from '../views/RegisterpointView.vue'
 import { useLoginStore } from '../stores/login'
 import ClientsView from '../views/ClientsView.vue'
 
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
