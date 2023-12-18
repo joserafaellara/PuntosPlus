@@ -33,9 +33,10 @@ export default {
     },
     async modificarCliente(id, cliente) {
         try {
-            await apiClient.put(`/users/${id}`, cliente)
-        } catch( error ) {
-            throw "Error de conexion"
+            const response = await apiClient.put(`/users/${id}`, cliente);
+            return response.data;
+        } catch (error) {
+            throw new Error('Error al modificar el cliente: ' + error.message);
         }
     },
     async searchCliente(dni) {

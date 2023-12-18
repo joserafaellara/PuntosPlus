@@ -1,6 +1,6 @@
 import axios from 'axios'
 const apiClient = axios.create({
-    baseURL: 'https://64860418a795d24810b79964.mockapi.io/api/v1/',
+    baseURL: 'https://657b3d4d394ca9e4af14097c.mockapi.io/',
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json'

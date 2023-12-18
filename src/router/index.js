@@ -5,8 +5,8 @@ import LogoutView from '../views/LogoutView.vue'
 import ProductsView from '../views/ProductsView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import RegisterpointView from '../views/RegisterpointView.vue'
-import { useLoginStore } from '../stores/login'
 import ClientsView from '../views/ClientsView.vue'
+import { useLoginStore } from '../stores/login'
 
 
 const router = createRouter({
@@ -58,14 +58,21 @@ const router = createRouter({
       component: () => import('../views/AboutView.vue')
     }
   ]
-})
+});
 router.beforeEach((to, from, next) => {
   const store = useLoginStore();
-  if (to.matched.some(r => r.meta.RequireAuth) && !store.isLogin) {
-    next('/login')
-  } else {
-    next()
-  }
-})
+  const isAuthenticated = store.isLogin;
+  const isAdmin = store.hasPermissions('admin');
 
-export default router
+  if (to.name === 'logout' && !isAuthenticated) {
+    // Si no está autenticado, redirigir a la ruta de login
+    next({ name: 'login' });
+  } else if ((to.name === 'registerpoint' || to.name === 'clients') && (!isAuthenticated || !isAdmin)) {
+    // Si no está autenticado o no es administrador, redirigir a la ruta de inicio
+    next({ name: 'home' });
+  } else {
+    next();
+  }
+});
+
+export default router;

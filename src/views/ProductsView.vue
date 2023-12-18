@@ -107,7 +107,6 @@ export default {
 #contenedor-info {
   position: relative;
   left: 10%;
-  top: 60px;
   max-width: 80%;
   margin: left;
 }

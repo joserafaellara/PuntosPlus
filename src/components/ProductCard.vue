@@ -9,12 +9,10 @@
         </div>
         <div v-else>
             <!-- Formulario de edición -->
-            <v-form @submit.prevent="saveEdits">
-                <v-text-field class="size" v-model="editedProduct.name" label="Nombre"></v-text-field>
-                <v-text-field class="size" v-model="editedProduct.points" label="Puntos"></v-text-field>
-                <v-textarea class="size" v-model="editedProduct.description" label="Descripcion"></v-textarea>
-                <v-btn class="btn-guardar" type="submit" color="primary" size="small">Guardar</v-btn>
-            </v-form>
+                <form-product-component
+                  :product="product"
+                  @save-edits="saveEdits"
+                ></form-product-component>
         </div>
         <v-card-actions v-if="hasPermissions('admin')">
             <v-btn v-if="!product.editing" class="btn-modificar" @click="edit" size="small">Editar</v-btn>
@@ -27,9 +25,12 @@
   <script>
   import { ref, reactive } from 'vue';
   import { storeToRefs } from 'pinia';
-  import { useLoginStore } from '@/stores/login'; // Ajusta la ruta según sea necesario
-
+  import { useLoginStore } from '@/stores/login';
+  import FormProductComponent from './FormProductComponent.vue';
   export default {
+    components: {
+      FormProductComponent
+    },
     props: {
       product: Object
     },
@@ -76,16 +77,7 @@
     margin: 10px;
   }
 
-  #contenedor-info{
-    position: relative !important;
-    padding:0px;
-    margin:20px!important;
-    }
   .formulario{
     margin:20px;
     }
-  .size{
-    max-width: 90%;
-    margin:auto;
-  }
   </style>

@@ -30,6 +30,7 @@
 
 <script>
 import { useLoginStore } from "@/stores/login";
+import { storeToRefs } from 'pinia'; 
 
 export default {
   name: "SideMenuComponent",
@@ -49,14 +50,13 @@ export default {
   },
   setup() {
     const store = useLoginStore();
-    const { isLogin } = store;
-    const hasPermissions = store.hasPermissions;
+    const { isLogin, user } = storeToRefs(store);
 
     const showMenuItem = (item) => {
       if (item.title === 'Registrarse') {
         return !isLogin.value;
       } else if (item.title === 'Registrar Venta' || item.title === 'Clientes') {
-        return isLogin.value && hasPermissions('admin');
+        return isLogin.value && user.value.permissions.includes('admin');
       } else {
         return true;
       }
